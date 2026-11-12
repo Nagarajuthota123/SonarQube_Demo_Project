@@ -61,7 +61,7 @@ jobs:
           path: coverage/lcov.info
       #step 5: run SonarQube analysis
       - name: run SonarQube analysis
-        uses: sonarsource/sonarqube-scan-action@v8.3.0
+        uses: sonarsource/sonarqube-scan-action@v6
         env:
           SONARQUBE_HOST_URL: ${{ secrets.SONARQUBE_HOST_URL }}
           SONARQUBE_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
