@@ -71,7 +71,7 @@ jobs:
         with:
           args: >
             -Dsonar.projectKey=SonarQube-demo-project
-            -Dsonar.projectName=SonarQube-demo-project
+            -Dsonar.projectName="SonarQube-demo-project"
             -Dsonar.projectVersion=1.0
             -Dsonar.sources=src
             -Dsonar.tests=tests
