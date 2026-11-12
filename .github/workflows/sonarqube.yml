@@ -35,6 +35,7 @@ jobs:
           name: test-results
           path: coverage
           retention-days: 5
+          if-no-files-found: error
       # Step 6: Verify coverage report
       - name: Verify coverage report
         run: |
@@ -61,24 +62,33 @@ jobs:
         # step 3: install dependencies
       - name: install dependencies
         run: npm install
-        # step 4: Getting the code coverage report from the previous job
+
+      # step 4: Getting the code coverage report from the previous job
       - name: Download test results
         uses: actions/download-artifact@v4
         with:
           name: test-results
-          path: coverage/lcov.info
-     # Step 5: Verify downloaded coverage
+          path: coverage
+
       - name: Verify downloaded coverage
         run: |
-          echo "Checking downloaded coverage..."
+          echo "Checking coverage report..."
           ls -lah coverage/
-          echo "Checking LCOV file..."
-          test -f coverage/lcov.info
-          head -20 coverage/lcov.info
-      #step: checking the java version
+
+          if [ -f coverage/lcov.info ]; then
+            echo "SUCCESS: LCOV report found"
+            head -20 coverage/lcov.info
+          else
+            echo "ERROR: LCOV report is missing or is not a file"
+            find coverage -maxdepth 4 -print
+            exit 1
+          fi
+
+      # step: checking the java version
       - name: Check Java version
         run: java -version
-      #step 5: run SonarQube analysis
+
+      # step 5: run SonarQube analysis
       - name: run SonarQube analysis
         uses: SonarSource/sonarqube-scan-action@v8.3.0
         env:
@@ -95,7 +105,7 @@ jobs:
             -Dsonar.exclusions=node_modules/**,coverage/**
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
 
-        #Step 6: sonarqube quality gate check
+      # Step 6: sonarqube quality gate check
       - name: sonarqube quality gate check
         uses: SonarSource/sonarqube-quality-gate-action@v1.2.0
         timeout-minutes: 5
