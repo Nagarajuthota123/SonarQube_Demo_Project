@@ -36,13 +36,6 @@ jobs:
           path: coverage
           retention-days: 5
           if-no-files-found: error
-      # Step 6: Verify coverage report
-      - name: Verify coverage report
-        run: |
-          echo "Checking coverage directory..."
-          ls -lah coverage/
-          echo "Checking LCOV file..."
-          test -f coverage/lcov.info
 
 
   sonarqube:
@@ -69,24 +62,6 @@ jobs:
         with:
           name: test-results
           path: coverage
-
-      - name: Verify downloaded coverage
-        run: |
-          echo "Checking coverage report..."
-          ls -lah coverage/
-
-          if [ -f coverage/lcov.info ]; then
-            echo "SUCCESS: LCOV report found"
-            head -20 coverage/lcov.info
-          else
-            echo "ERROR: LCOV report is missing or is not a file"
-            find coverage -maxdepth 4 -print
-            exit 1
-          fi
-
-      # step: checking the java version
-      - name: Check Java version
-        run: java -version
 
       # step 5: run SonarQube analysis
       - name: run SonarQube analysis
