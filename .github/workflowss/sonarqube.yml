@@ -48,4 +48,38 @@ jobs:
       - name: set up node environment
         uses: actions/setup-node@v4
         with:
-          node-version: 20     
+          node-version: 20  
+        # step 3: install dependencies
+      - name: install dependencies
+        run: npm install
+        # step 4: Getting the code coverage report from the previous job
+      - name: Download test results
+        uses: actions/download-artifact@v4
+        with:
+          name: test-results
+          path: Coverage
+      #step 5: run SonarQube analysis
+      - name: run SonarQube analysis
+        uses: sonarsource/sonarqube-scan-action@v8.3.0
+        env:
+          SONARQUBE_HOST_URL: ${{ secrets.SONARQUBE_HOST_URL }}
+          SONARQUBE_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=SonarQube-demo-project
+            -Dsonar.projectName="SonarQube-demo-project"
+            -Dsonar.projectVersion=1.0
+            -Dsonar.sources=src
+            -Dsonar.tests=tests
+            -Dsonar.test.inclusions=tests/**/*.test.js
+            -Dsonar.exclusions=node_modules/**,coverage/**
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+
+        #Step 6: sonarqube quality gate check
+      - name: sonarqube quality gate check
+        uses: sonarsource/sonarqube-quality-gate-action@v1.2.0
+        timeout-minutes: 5
+        env:
+          SONARQUBE_HOST_URL: ${{ secrets.SONARQUBE_HOST_URL }}
+          SONARQUBE_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+ 
