@@ -30,7 +30,7 @@ jobs:
 
       # step 5: upload test results
       - name: upload test results
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         with:
           name: test-results
           path: coverage/lcov.info
@@ -64,7 +64,7 @@ jobs:
         run: java -version
       #step 5: run SonarQube analysis
       - name: run SonarQube analysis
-        uses: sonarsource/sonarqube-scan-action@v7.2.0.5079
+        uses: sonarsource/sonarqube-scan-action@v8.3.0
         env:
           SONARQUBE_HOST_URL: ${{ secrets.SONARQUBE_HOST_URL }}
           SONARQUBE_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
