@@ -59,9 +59,12 @@ jobs:
         with:
           name: test-results
           path: coverage/lcov.info
+      #step: checking the java version
+      - name: Check Java version
+        run: java -version
       #step 5: run SonarQube analysis
       - name: run SonarQube analysis
-        uses: sonarsource/sonarqube-scan-action@v6
+        uses: sonarsource/sonarqube-scan-action@v7.2.0.5079
         env:
           SONARQUBE_HOST_URL: ${{ secrets.SONARQUBE_HOST_URL }}
           SONARQUBE_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
